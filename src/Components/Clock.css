@@ -1,0 +1,17 @@
+.h2-container {
+    width: 30px;
+    align-items: center;
+  }
+
+  button:hover {
+    border: 3px solid green
+  }
+
+  button:active{
+    border: 3px solid green;
+    box-shadow: grey inset 2px 2px;
+  }
+
+  button {
+    border: 3px solid red;
+  }
