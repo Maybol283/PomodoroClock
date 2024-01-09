@@ -64,7 +64,7 @@ function Clock() {
     if (isTimerRunning) {
       timerId = setInterval(() => {
         DecrementTimer();
-      }, 100);
+      }, 1000);
     } else {
       clearInterval(timerId);
     }

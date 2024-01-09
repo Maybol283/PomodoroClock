@@ -4,11 +4,11 @@
   }
 
   button:hover {
-    border: 3px solid green
+    border: 3px solid lightgreen
   }
 
   button:active{
-    border: 3px solid green;
+    border: 3px solid lightgreen;
     box-shadow: grey inset 2px 2px;
   }
 
