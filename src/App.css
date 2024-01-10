@@ -1,14 +1,14 @@
 #root {
   background-image: url("./assets/tomato.svg");
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
   background-color: red;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 75%;
+  background-size: 50%;
   align-self: center;
 }
 
@@ -21,3 +21,11 @@
 }
 
 
+@media screen and (max-width: 992px) {
+  #root {
+    background-size: 80%;
+  }
+  .clock{
+    margin-top: 30vh;
+  }
+}

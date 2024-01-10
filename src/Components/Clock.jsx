@@ -6,7 +6,7 @@ import {
   faPlay,
   faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 function Clock() {
   const [Minutes, SetMinutes] = useState(25);
@@ -15,23 +15,54 @@ function Clock() {
   const [StudyLength, SetStudyLength] = useState(25);
   const [SessionState, SetSessionState] = useState("study");
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const intervalIdRef = useRef(null);
 
   const HandleClick = (type, direction) => {
     if (type === "break") {
       if (direction === "up") {
-        SetBreakLength(BreakLength + 1);
-      } else {
-        SetBreakLength(BreakLength - 1);
+        SetBreakLength((prevLength) => prevLength + 1);
+      } else if (BreakLength > 0) {
+        SetBreakLength((prevLength) => prevLength - 1);
       }
     } else if (type === "study") {
       if (direction === "up") {
-        SetStudyLength(StudyLength + 1);
-        SetMinutes(StudyLength + 1);
-      } else {
-        SetStudyLength(StudyLength - 1);
-        SetMinutes(StudyLength - 1);
+        SetStudyLength((prevLength) => {
+          SetMinutes(prevLength + 1);
+          return prevLength + 1;
+        });
+      } else if (StudyLength > 0) {
+        SetStudyLength((prevLength) => {
+          SetMinutes(prevLength - 1);
+          return prevLength - 1;
+        });
       }
     }
+  };
+
+  const HandleMouseDown = (type, direction) => {
+    if (!intervalIdRef.current) {
+      intervalIdRef.current = setInterval(() => {
+        HandleClick(type, direction);
+      }, 100); // Adjust the interval as needed
+    }
+  };
+
+  const ClearInterval = () => {
+    if (intervalIdRef.current) {
+      clearInterval(intervalIdRef.current);
+      intervalIdRef.current = null;
+    }
+  };
+
+  const HandleMouseUp = () => ClearInterval();
+  const HandleMouseLeave = () => ClearInterval();
+
+  const HandleTouchStart = (type, direction) => {
+    HandleMouseDown(type, direction); // Reuse the mouse down logic
+  };
+
+  const HandleTouchEnd = () => {
+    HandleMouseUp(); // Reuse the mouse up logic
   };
 
   const DecrementTimer = () => {
@@ -99,6 +130,11 @@ function Clock() {
         <h4>Break Length</h4>
         <button
           onClick={() => HandleClick("break", "up")}
+          onMouseDown={() => HandleMouseDown("break", "up")}
+          onMouseUp={HandleMouseUp}
+          onMouseLeave={HandleMouseLeave}
+          onTouchStart={() => HandleTouchStart("break", "up")}
+          onTouchEnd={HandleTouchEnd}
           className="d-inline-block"
         >
           <FontAwesomeIcon icon={faArrowUp} />
@@ -108,7 +144,11 @@ function Clock() {
         </h2>
         <button
           onClick={() => HandleClick("break", null)}
-          className="d-inline-block"
+          onMouseDown={() => HandleMouseDown("break", null)}
+          onMouseUp={HandleMouseUp}
+          onMouseLeave={HandleMouseLeave}
+          onTouchStart={() => HandleTouchStart("break", null)}
+          onTouchEnd={HandleTouchEnd}
         >
           <FontAwesomeIcon icon={faArrowDown} />
         </button>
@@ -117,6 +157,11 @@ function Clock() {
         <h4>Study Length</h4>
         <button
           onClick={() => HandleClick("study", "up")}
+          onMouseDown={() => HandleMouseDown("study", "up")}
+          onMouseUp={HandleMouseUp}
+          onMouseLeave={HandleMouseLeave}
+          onTouchStart={() => HandleTouchStart("study", "up")}
+          onTouchEnd={HandleTouchEnd}
           className="d-inline-block"
         >
           <FontAwesomeIcon icon={faArrowUp} />
@@ -126,6 +171,11 @@ function Clock() {
         </h2>
         <button
           onClick={() => HandleClick("study", null)}
+          onMouseDown={() => HandleMouseDown("study", null)}
+          onMouseUp={HandleMouseUp}
+          onMouseLeave={HandleMouseLeave}
+          onTouchStart={() => HandleTouchStart("study", null)}
+          onTouchEnd={HandleTouchEnd}
           className="d-inline-block"
         >
           <FontAwesomeIcon icon={faArrowDown} />
