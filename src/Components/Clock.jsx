@@ -21,8 +21,8 @@ function Clock() {
     if (type === "break") {
       if (direction === "up") {
         SetBreakLength((prevLength) => prevLength + 1);
-      } else if (BreakLength > 0) {
-        SetBreakLength((prevLength) => prevLength - 1);
+      } else {
+        SetBreakLength((prevLength) => (prevLength > 0 ? prevLength - 1 : 0));
       }
     } else if (type === "study") {
       if (direction === "up") {
@@ -30,10 +30,11 @@ function Clock() {
           SetMinutes(prevLength + 1);
           return prevLength + 1;
         });
-      } else if (StudyLength > 0) {
+      } else {
         SetStudyLength((prevLength) => {
-          SetMinutes(prevLength - 1);
-          return prevLength - 1;
+          const newLength = prevLength > 0 ? prevLength - 1 : 0;
+          SetMinutes(newLength);
+          return newLength;
         });
       }
     }
